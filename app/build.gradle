@@ -1,0 +1,113 @@
+apply plugin: 'com.android.application'
+apply plugin: 'insertcode'
+//apply plugin: 'patchmaker'
+
+android {
+    compileSdkVersion 30
+    defaultConfig {
+        applicationId "com.ctrip.test.r8crashdemo"
+        minSdkVersion 23
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        debug {
+            keyAlias 'test'
+            keyPassword '123456'
+            storeFile file('../test')
+            storePassword '123456'
+        }
+        release {
+            keyAlias 'test'
+            keyPassword '123456'
+            storeFile file('../test')
+            storePassword '123456'
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+    sourceSets {
+        main {
+            assets.srcDirs = ['assets/']
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+}
+
+dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+//    implementation(name: 'patch-debug', ext: 'aar')
+    implementation project(path: ':patch')
+}
+
+project.afterEvaluate {
+    compileDebugJavaWithJavac.doLast {
+//        apply plugin: 'modifycode'
+//        apply plugin: 'patchcreator'
+    }
+}
+task createPatch(dependsOn: 'app:transformClassesWithPatchmakerForDebug') {
+    doLast {
+        println 'create patch success'
+    }
+}
+
+project.ext {
+    Properties properties = new Properties()
+    File localProperties = new File("$rootDir/local.properties")
+    if (localProperties.exists()) {
+        properties.load(localProperties.newDataInputStream())
+
+    }
+    sdkDir = properties.getProperty('sdk.dir')
+    androidJar = "$sdkDir/platforms/android-26/android.jar"
+}
+import groovy.io.FileType
+import groovy.json.JsonBuilder
+
+task test1 {
+    doLast {
+        def path = "${project.projectDir}/assets/build-outputs"
+        def classesFile = file(path + "/classes.map")
+        println path
+        def dir = file(path)
+        def array = []
+        dir.traverse(type: FileType.FILES,
+                nameFilter: ~/.*\.map/
+        ) {
+            println it
+            def jsonSlurper = new groovy.json.JsonSlurper()
+            def data = jsonSlurper.parseText(it.text)
+            array.addAll(data)
+        }
+        String arrayStr = new JsonBuilder(array).toPrettyString()
+        classesFile.write(arrayStr)
+    }
+}

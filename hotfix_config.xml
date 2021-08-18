@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--是否开启插入代码的开关，默认开启-->
+    <switch>
+        <turnOnInsertCode>true</turnOnInsertCode>
+        <isPatchAuto>false</isPatchAuto>
+    </switch>
+
+    <!--需要插入代码的包名-->
+    <needToInsertCodePackages>
+        <name>com.crtip.test.r8crashdemo.utils</name>
+    </needToInsertCodePackages>
+
+</resources>

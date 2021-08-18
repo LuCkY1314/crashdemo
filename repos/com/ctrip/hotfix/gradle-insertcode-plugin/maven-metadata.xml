@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>com.ctrip.hotfix</groupId>
+  <artifactId>gradle-insertcode-plugin</artifactId>
+  <versioning>
+    <release>0.9.9-test</release>
+    <versions>
+      <version>0.9.5</version>
+      <version>0.9.5-test</version>
+      <version>0.9.9</version>
+      <version>0.9.9-test</version>
+    </versions>
+    <lastUpdated>20210818090122</lastUpdated>
+  </versioning>
+</metadata>
