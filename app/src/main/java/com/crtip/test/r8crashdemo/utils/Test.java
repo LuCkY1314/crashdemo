@@ -6,10 +6,4 @@ public class Test {
         if (a == null) System.out.println("22");
     }
 
-//    private int ddd(String operation) {
-//        if (operation == null) {
-//            System.out.println("2222");
-//        }
-//        return 3;
-//    }
 }
