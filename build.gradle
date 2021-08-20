@@ -6,10 +6,23 @@ buildscript {
         maven {
             url uri("${gradle.rootProject.getRootDir()}/repos")
         }
+        maven {
+            url "http://maven.release.ctripcorp.com/nexus/content/groups/public"
+        }
+        maven {
+            url "http://maven.wireless.release.ctripcorp.com/nexus/content/repositories/releases"
+        }
+        maven {
+            url "http://maven.wireless.release.ctripcorp.com/nexus/content/groups/public"
+        }
+        maven {
+            url "https://storage.googleapis.com/r8-releases/raw/main"
+        }
     }
     dependencies {
+        classpath 'com.android.tools:r8:4f8ea7c3ab3d92fa6d926fbe4fde98e4beb0a58d'
         classpath "com.android.tools.build:gradle:4.2.0"
-        classpath 'com.ctrip.hotfix:gradle-insertcode-plugin:0.9.9-test'
+        classpath 'com.ctrip.hotfix:gradle-insertcode-plugin:0.9.9'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -21,6 +34,18 @@ allprojects {
         mavenCentral()
         maven {
             url uri("${gradle.rootProject.getRootDir()}/repos")
+        }
+        maven {
+            url "http://maven.release.ctripcorp.com/nexus/content/groups/public"
+        }
+        maven {
+            url "http://maven.wireless.release.ctripcorp.com/nexus/content/repositories/releases"
+        }
+        maven {
+            url "http://maven.wireless.release.ctripcorp.com/nexus/content/groups/public"
+        }
+        maven {
+            url "https://storage.googleapis.com/r8-releases/raw/main"
         }
         jcenter() // Warning: this repository is going to shut down soon
     }

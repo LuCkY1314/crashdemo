@@ -1,2 +1,3 @@
 rootProject.name = "R8CrashDemo"
 include ':app', ':patch', ':PatchDispatcher'
+include ':hotfixdemo'

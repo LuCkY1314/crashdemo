@@ -1,0 +1,53 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation 'com.android.tools:r8:4f8ea7c3ab3d92fa6d926fbe4fde98e4beb0a58d'
+    implementation 'com.android.tools.build:gradle:4.2.0'
+}
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url "https://storage.googleapis.com/r8-releases/raw/main" }
+    }
+
+    dependencies {
+        // Must be before the Gradle Plugin for Android.
+//        classpath 'com.android.tools:r8:469c04a741fe0f738140133d3693ef726bd2c685'
+        classpath 'com.android.tools:r8:4f8ea7c3ab3d92fa6d926fbe4fde98e4beb0a58d'
+        classpath 'com.android.tools.build:gradle:4.2.0'
+    }
+}
+
+repositories {
+    google()
+    mavenCentral()
+    maven { url "https://storage.googleapis.com/r8-releases/raw/main" }
+}
+
+
+project.gradle.addListener(new TaskExecutionAdapter() {
+
+    FileCollection compileKotlinOutput
+
+    @Override
+    void beforeExecute(Task task) {
+        if (task instanceof JavaCompile) {
+            FileCollection oldClasspath = task.getClasspath()
+            ConfigurableFileCollection newClasspath = task.project.objects.fileCollection()
+            newClasspath.from(compileKotlinOutput, oldClasspath)
+            task.setClasspath(newClasspath)
+        }
+    }
+
+    @Override
+    void afterExecute(Task task, TaskState state) {
+        if (task.name == 'compileKotlin') {
+            compileKotlinOutput = task.outputs.files
+        }
+    }
+})
